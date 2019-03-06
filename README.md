@@ -1,6 +1,6 @@
 # BBC micro:bit MakeCode editor extension for DHT11 and DHT22 humidity/temperature sensors (BETA)
 
-[DHT11](https://www.mouser.com/ds/2/758/DHT11-Technical-Data-Sheet-Translated-Version-1143054.pdf) and [DHT22](https://www.sparkfun.com/datasheets/Sensors/Temperature/DHT22.pdf) are two popular sensors among microcontroller users; especially DHT11, which is pretty cheap, although also more inaccurate. DHT22 cost more but have better data precision.
+[DHT11](https://www.mouser.com/ds/2/758/DHT11-Technical-Data-Sheet-Translated-Version-1143054.pdf) and [DHT22](https://www.sparkfun.com/datasheets/Sensors/Temperature/DHT22.pdf) are two popular sensors among microcontroller users; especially DHT11, which is pretty cheap. DHT22 cost more and gave better data precision.
 
 ![img_0001](https://user-images.githubusercontent.com/44191076/53887169-aae7d600-405c-11e9-9fd4-688eacbf0721.JPG)
 
@@ -39,7 +39,7 @@ Temperature: 23.3 'C
 ------------------------------
 ```
 
-The sensors have two types, one without PCB board and have 4 pins; another have PCB board, built-in pull up resistor and only 3 pins.
+There are two types of DHT11/DHT22s, one without PCB board and have 4 pins; another have PCB board, built-in pull up resistor and only 3 pins.
 
 For the 3-pin version it's easy: Vcc (+) to 3.3V or 5V (both works, although 5V might work a bit better), GND (-) to GND, Data (out) to any GPIO pins you like.
 
@@ -49,15 +49,19 @@ If you are using the 4 pin version, you'll need to add a resistor (about 5-10 KÎ
 
 ![untitled sketch_bb](https://user-images.githubusercontent.com/44191076/53887940-40379a00-405e-11e9-9129-5bdb6262e8a3.png)
 
+If a hardware pull-up resistor already exists, set internal pull up as true dosen't seems to affect the results.
+
 
 
 ## BETA testing
 
-Since DHT11s are notoriously inaccurate, and I only have limited sensor samples, the extension needs furthur testing to be sure if it's working like it should.
+Since DHT11s are notoriously - repeat, notoriously - inaccurate, especially the humidity part, and I only have limited sensor samples, the extension needs furthur testing to be absolutly sure if it's working like it should.
 
-So far my both PCB version sensors worked and gave pretty consistent readings (the humidity level is a bit lower from my BME280 sensor). I have two 4-pin DHT11s (found in my office) as well, but only one of them gave more or less currect reading sometimes. I cannot be sure if they are already damaged or not.
+My code are based on [MonadnockSystems/pxt-dht11](https://github.com/MonadnockSystems/pxt-dht11) but improved the pin pull-up time calculating method. 
 
-I'd be appreciated if you can help me testing this extension and give me any feedbacks. If all goes well, I'll apply approval from the MakeCode team.
+So far my both PCB version sensors worked well and gave pretty consistent readings (the humidity level is a bit lower from my BME280 sensor though). I have two 4-pin DHT11s as well (found in my office), but only one of them gave more or less currect reading sometimes. I am not sure if any of they are already damaged or not.
+
+I also gave up the checksum data because my DHT22 always gave wrong checksums even though the humidity/temperature data looks legit. (My DHT11 always gave correct checksums.)
 
 
 
