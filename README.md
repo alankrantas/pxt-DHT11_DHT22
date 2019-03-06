@@ -61,9 +61,9 @@ Since DHT11s are notoriously - repeat, notoriously - inaccurate, especially the 
 
 My code are based on [MonadnockSystems/pxt-dht11](https://github.com/MonadnockSystems/pxt-dht11) but improved the pin pull-up time calculating method. 
 
-So far my both PCB version sensors worked well and gave pretty consistent readings (the humidity level is a bit lower from my BME280 sensor though). I have two 4-pin DHT11s as well (found in my office), but only one of them gave more or less currect reading sometimes. I am not sure if any of they are already damaged or not.
+So far my both PCB version sensors worked well and gave consistent readings (the humidity level is a bit lower from my BME280 sensor though). I have two 4-pin DHT11s as well (found in my office), but only one of them gave more or less correct reading sometimes. I am not sure if any of they are already damaged or not.
 
-I also gave up the checksum data because my DHT22 always gave wrong checksums even though the humidity/temperature data looks legit. (My DHT11 always gave correct checksums.)
+I also gave up the checksum data because my DHT22 always gave wrong checksums even though the humidity/temperature data looks legit. My DHT11 always gave correct checksums.
 
 
 
