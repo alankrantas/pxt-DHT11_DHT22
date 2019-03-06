@@ -8,11 +8,11 @@
     },
     "files": [
         "README.md",
-        "main.ts"
+        "main.ts",
+        "dht11_dht22.ts"
     ],
     "testFiles": [
         "test.ts"
     ],
-    "public": false,
-    "additionalFilePaths": []
+    "public": false
 }
