@@ -47,6 +47,8 @@ For the PCB version it's easy: Vcc (+) to 3.3V or 5V (both works, although 5V mi
 
 ![dht11-pinout-for-three-pin-and-four-pin-types-2](https://user-images.githubusercontent.com/44191076/53887826-0ebece80-405e-11e9-997b-a9f1b5e67a41.jpg)
 
+Be noted that some PCB version sensors have slightly different order of pins.
+
 If you are using the 4 pin version, you'll need to add a resistor (in my test 220 Ω - 10 KΩ works under 3.3V; above that the sensor won't response) between Vcc and Data to pull up the data pin. Or you can simply use the pull up option in the query block - the micro:bit has a internal resistor about 12-13 KΩ.
 
 The third pin from the left is not used.
