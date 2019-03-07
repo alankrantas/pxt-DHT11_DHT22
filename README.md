@@ -43,27 +43,29 @@ Temperature: 23.3 'C
 
 There are two types of DHT11/DHT22s, one without PCB board and have 4 pins; another have PCB board, built-in pull up resistor and only 3 pins.
 
-For the 3-pin version it's easy: Vcc (+) to 3.3V or 5V (both works, although 5V might work a bit better), GND (-) to GND, Data (out) to any GPIO pins you like.
+For the PCB version it's easy: Vcc (+) to 3.3V or 5V (both works, although 5V might work a bit better), GND (-) to GND, Data (out) to any GPIO pins you like.
 
 ![dht11-pinout-for-three-pin-and-four-pin-types-2](https://user-images.githubusercontent.com/44191076/53887826-0ebece80-405e-11e9-997b-a9f1b5e67a41.jpg)
 
-If you are using the 4 pin version, you'll need to add a resistor (about 5-10 KΩ) between Vcc and Data to pull up the latter pin. Or you can simply use the pull up option in the block. (The micro:bit has a internal resistor about 12-13 KΩ.) The third pin from the left is not used.
+If you are using the 4 pin version, you'll need to add a resistor (in my test 220 Ω - 10 KΩ works under 3.3V; above that the sensor won't response) between Vcc and Data to pull up the data pin. Or you can simply use the pull up option in the query block - the micro:bit has a internal resistor about 12-13 KΩ.
+
+The third pin from the left is not used.
 
 ![untitled sketch_bb](https://user-images.githubusercontent.com/44191076/53887940-40379a00-405e-11e9-9129-5bdb6262e8a3.png)
 
-If a hardware pull-up resistor already exists, set internal pull up as true dosen't seems to affect the results.
+If a hardware pull-up resistor already exists, set the internal pull up resistor dosen't seems to affect the results.
 
 
 
-## BETA testing
+## In BETA testing
 
-Since DHT11s are notoriously - repeat, notoriously - inaccurate, especially the humidity part, and I only have limited sensor samples, the extension needs furthur testing to be absolutly sure if it's working like it should.
+Since some DHT11s are known to be notoriously - I repeat, notoriously - inaccurate, especially the humidity part, and I only have limited sensor samples, the extension needs furthur testing to be absolutly sure if it's working like it should.
 
 My code are based on [MonadnockSystems/pxt-dht11](https://github.com/MonadnockSystems/pxt-dht11) but improved the pin pull-up time calculating method. 
 
-So far my both PCB version sensors worked well and gave consistent readings (the humidity level is a bit lower from my BME280 sensor though). I have two 4-pin DHT11s as well (found in my office), but only one of them gave more or less correct reading sometimes. I am not sure if any of they are already damaged or not.
+So far my both PCB version sensors worked well and gave consistent readings. I found two 4-pin DHT11s in my office as well, but their humidity reading are much lower than it should (probably already damaged), regardess what pull-up resistor I used. I would recommend buying PCB versions for your own usage.
 
-I also gave up the checksum data because my DHT22 always gave wrong checksums even though the humidity/temperature data looks legit. My DHT11 always gave correct checksums.
+I also gave up using the checksum data because my DHT22 always gave wrong checksums even though the humidity/temperature data looks legit. My DHT11s always gave correct checksums.
 
 
 
