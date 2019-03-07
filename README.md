@@ -12,6 +12,8 @@ The extension is appliable to DHT11 and DHT22. Use the first block to read data 
 
 ![1](https://user-images.githubusercontent.com/44191076/53888212-dd92ce00-405e-11e9-9947-6cbb0caf10a0.jpg)
 
+![microbit-screenshot](https://user-images.githubusercontent.com/44191076/53931035-7f053880-40ce-11e9-9509-dff5edd7da0e.png)
+
 You can also output data to serial port:
 
 ```
