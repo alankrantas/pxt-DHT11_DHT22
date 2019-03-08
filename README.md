@@ -8,40 +8,65 @@ Add this extension by go to Advanced -> +extension and copy/paste [https://githu
 
 ![img_0002](https://user-images.githubusercontent.com/44191076/53887223-cf43b280-405c-11e9-97a0-495904cf6cae.JPG)
 
-The extension is appliable to DHT11 and DHT22. Use the first block to read data (it is recommended to wait between queries; 1 second for DHT11 and 2 seconds for DHT22), then use the second one to read humidity level (%) or temperature (Celsius).
+## Blocks
+
+The extension can be used for DHT11 and DHT22 sensors. Use the first block to read data (it is recommended to wait between queries; 1 second for DHT11 and 2 seconds for DHT22), then use the second one to read humidity level (%) or temperature (celsius).
+
+This extension also verifies checksum from sensors. If the checksum is wrong, you'll get -999 for both temperature and humidity readings.
 
 ![1](https://user-images.githubusercontent.com/44191076/53888212-dd92ce00-405e-11e9-9947-6cbb0caf10a0.jpg)
 
 ![microbit-screenshot](https://user-images.githubusercontent.com/44191076/53931035-7f053880-40ce-11e9-9509-dff5edd7da0e.png)
 
-You can also output data to serial port:
+You can also choose to output data to serial port:
 
 ```
-DHT22 query completed in 24703 microseconds                   
-Humidity: 69.500000000000001 %
-Temperature: 23.1 'C          
+DHT11 query completed in 25848 microseconds                   
+Checksum ok                   
+Humidity: 77 %                
+Temperature: 22.01 'C         
 ------------------------------
-DHT22 query completed in 26162 microseconds                   
-Humidity: 71.500000000000003 %
-Temperature: 23.3 'C          
+DHT11 query completed in 25849 microseconds                   
+Checksum ok                   
+Humidity: 77 %                
+Temperature: 22.01 'C         
 ------------------------------
-DHT22 query completed in 26047 microseconds                   
-Humidity: 69.400000000000003 %
-Temperature: 23.3 'C          
+DHT11 query completed in 25838 microseconds                   
+Checksum ok                   
+Humidity: 77 %                
+Temperature: 22 'C            
 ------------------------------
-DHT22 query completed in 26162 microseconds                   
-Humidity: 68.700000000000001 %
-Temperature: 23.3 'C          
-------------------------------
-DHT22 query completed in 26019 microseconds                   
-Humidity: 68.099999999999996 %
-Temperature: 23.3 'C          
-------------------------------
-DHT22 query completed in 26047 microseconds                   
-Humidity: 67.599999999999997 %
-Temperature: 23.3 'C          
+DHT11 query completed in 25861 microseconds                   
+Checksum ok                   
+Humidity: 77 %                
+Temperature: 22 'C            
 ------------------------------
 ```
+
+```
+DHT22 query completed in 26162 microseconds                   
+Checksum ok                   
+Humidity: 74.500000000000001 %
+Temperature: 21.899999999999999 'C                            
+------------------------------
+DHT22 query completed in 26162 microseconds                   
+Checksum ok                   
+Humidity: 74.299999999999997 %
+Temperature: 21.899999999999999 'C                            
+------------------------------
+DHT22 query completed in 26120 microseconds                   
+Checksum ok                   
+Humidity: 74.099999999999992 %
+Temperature: 21.899999999999999 'C                            
+------------------------------
+DHT22 query completed in 26048 microseconds                   
+Checksum ok                   
+Humidity: 74 %                
+Temperature: 21.899999999999999 'C                            
+------------------------------
+```
+
+## Sensor versions and wiring
 
 There are two types of DHT11/DHT22s, one without PCB board and have 4 pins; another have PCB board, built-in pull up resistor and only 3 pins.
 
@@ -53,30 +78,23 @@ Be noted that some PCB version sensors have slightly different order of pins.
 
 If you are using the 4 pin version, you'll need to add a resistor (in my test 220 Ω - 10 KΩ works under 3.3V; above that the sensor won't response) between Vcc and Data to pull up the data pin. Or you can simply use the pull up option in the query block - the micro:bit has a internal resistor about 12-13 KΩ.
 
-The third pin from the left is not used.
+The third pin on the 4-pin sensor from the left is not used.
 
 ![untitled sketch_bb](https://user-images.githubusercontent.com/44191076/53887940-40379a00-405e-11e9-9129-5bdb6262e8a3.png)
 
 If a hardware pull-up resistor already exists, set the internal pull up resistor dosen't seems to affect the results.
 
+## BETA testing
 
+Some DHT11s are known to be notoriously - I repeat, notoriously - inaccurate, especially the humidity part, and I only have limited sensor samples. Hence the extension may needs furthur testing to be absolutly sure if it's appliable to all similar sensors.
 
-## In BETA testing
+My codes are based on [MonadnockSystems/pxt-dht11](https://github.com/MonadnockSystems/pxt-dht11) but improved the pin pull-up time calculating method with additional features (for example, checksum verification).
 
-Since some DHT11s are known to be notoriously - I repeat, notoriously - inaccurate, especially the humidity part, and I only have limited sensor samples, the extension needs furthur testing to be absolutly sure if it's working like it should.
-
-My code are based on [MonadnockSystems/pxt-dht11](https://github.com/MonadnockSystems/pxt-dht11) but improved the pin pull-up time calculating method. 
-
-So far my both PCB version sensors worked well and gave consistent readings. I found two 4-pin DHT11s in my office as well, but their humidity reading are much lower than it should (probably already damaged), regardess what pull-up resistor I used. I would recommend buying PCB versions for your own usage.
-
-I also gave up using the checksum data because my DHT22 always gave wrong checksums even though the humidity/temperature data looks legit. My DHT11s always gave correct checksums.
-
-
+So far both my PCB version sensors works well and gave consistent readings. I found two 4-pin DHT11s in my office as well, but their humidity reading are much lower than usual (probably already damaged), regardess what pull-up resistor I used. I would recommend buying PCB versions for your own usage.
 
 ## License
 
 MIT
-
 
 ## Supported targets
 
