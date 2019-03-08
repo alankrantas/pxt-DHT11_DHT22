@@ -8,10 +8,11 @@ namespace DHT11_DHT22 {
     let _temperature: number = 0.0
     let _humidity: number = 0.0
     let _checksum: number = 0
+    let _readSuccessful: boolean = false
 
     /**
-    * Query data from DHT11/DHT22 sensor. If you are using one wih 4 pins and no PCB board, you'll need to pull up the data pin. 
-    * It is also recommended to wait 2 seconds between each query.
+    * Query data from DHT11/DHT22 sensor. If you are using 4 pins/no PCB board versions, you'll need to pull up the data pin. 
+    * It is also recommended to wait 1 (DHT11) or 2 (DHT22) seconds between each query.
     */
     //% block="Query $DHT|Data pin $dataPin|Pin pull up $pullUp|Serial output $serialOtput|Wait 2 sec after query $wait"
     //% pullUp.defl=true
@@ -23,12 +24,13 @@ namespace DHT11_DHT22 {
         //initialize
         let startTime: number = 0
         let endTime: number = 0
+        let checksumTmp: number = 0
         let dataArray: boolean[] = []
         let resultArray: number[] = []
         for (let index = 0; index < 40; index++) dataArray.push(false)
         for (let index = 0; index < 5; index++) resultArray.push(0)
-        _humidity = 0.0
-        _temperature = 0.0
+        _humidity = -999.0
+        _temperature = -999.0
         _checksum = 0
 
         startTime = input.runningTimeMicros()
@@ -53,12 +55,10 @@ namespace DHT11_DHT22 {
 
         endTime = input.runningTimeMicros()
 
-        //byte number array convert to integer
+        //convert byte number array to integer
         for (let index = 0; index < 5; index++) {
             for (let index2 = 0; index2 < 8; index2++) {
-                if (dataArray[8 * index + index2]) {
-                    resultArray[index] += 2 ** (7 - index2)
-                }
+                if (dataArray[8 * index + index2]) resultArray[index] += 2 ** (7 - index2)
             }
         }
 
@@ -83,6 +83,11 @@ namespace DHT11_DHT22 {
             _checksum = resultArray[4]
         }
 
+        //verify checksum
+        checksumTmp = resultArray[0] + resultArray[1] + resultArray[2] + resultArray[3]
+        if (checksumTmp >= 256) checksumTmp -= 256
+        if (_checksum == checksumTmp) _readSuccessful = true
+
         //serial output
         if (serialOtput) {
             let DHTstr: string = ""
@@ -92,8 +97,14 @@ namespace DHT11_DHT22 {
                 DHTstr = "DHT22"
             }
             serial.writeLine(DHTstr + " query completed in " + (endTime - startTime) + " microseconds")
-            serial.writeLine("Humidity: " + _humidity + " %")
-            serial.writeLine("Temperature: " + _temperature + " 'C")
+            if (_readSuccessful) {
+                serial.writeLine("Checksum ok")
+                serial.writeLine("Humidity: " + _humidity + " %")
+                serial.writeLine("Temperature: " + _temperature + " 'C")
+            } else {
+                serial.writeLine("Checksum error")
+            }
+
             serial.writeLine("------------------------------")
         }
 
@@ -107,15 +118,25 @@ namespace DHT11_DHT22 {
     */
     //% block="Read $data"
     export function readData(data: dataType): number {
-        let returnData: number = 0
-        switch (data) {
-            case dataType.humidity:
-                returnData = _humidity
-                break
-            case dataType.temperature:
-                returnData = _temperature
+        let returnData: number = -999.0
+        if (_readSuccessful) {
+            switch (data) {
+                case dataType.humidity:
+                    returnData = _humidity
+                    break
+                case dataType.temperature:
+                    returnData = _temperature
+            }
         }
         return returnData
+    }
+
+    /**
+    * Determind if last query is successful (checksum ok)
+    */
+    //% block="Last query successful?"
+    export function readDataSuccessful(): boolean {
+        return _readSuccessful
     }
 
 }
