@@ -71,18 +71,27 @@ namespace DHT11_DHT22 {
 
         //read data if checksum ok
         if (_readSuccessful) {
-            if (DHT == DHTtype.DHT11) { //DHT11
+            if (DHT == DHTtype.DHT11) {
+                //DHT11
                 _humidity = resultArray[0] + resultArray[1] / 100
                 _temperature = resultArray[2] + resultArray[3] / 100
-            } else if (DHT == DHTtype.DHT22) { //DHT22
+            } else if (DHT == DHTtype.DHT22) {
+                //DHT22
                 let DHT22_dataArray: number[] = [0, 0]
-                for (let index = 0; index < 2; index++) {
+                let tmpData: number = 1
+                for (let index = 0; index <= 1; index++) {
                     for (let index2 = 0; index2 < 16; index2++) {
-                        if (dataArray[16 * index + index2]) DHT22_dataArray[index] += 2 ** (15 - index2)
+                        if (dataArray[16 * index + index2]) {
+                            if (index == 1 && index2 == 0) {
+                                tmpData = -1 //positive or negative temperature indicator
+                            } else {
+                                DHT22_dataArray[index] += 2 ** (15 - index2)
+                            }
+                        }
                     }
                 }
                 _humidity = DHT22_dataArray[0] / 10
-                _temperature = DHT22_dataArray[1] / 10
+                _temperature = DHT22_dataArray[1] / 10 * tmpData
             }
         }
 
