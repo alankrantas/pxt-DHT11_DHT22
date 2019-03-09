@@ -62,31 +62,29 @@ namespace DHT11_DHT22 {
             }
         }
 
-        //read data
-        if (DHT == DHTtype.DHT11) {
-            //DHT11
-            if (resultArray[4] == resultArray[0] + resultArray[1] + resultArray[2] + resultArray[3]) {
-                _humidity = resultArray[0] + resultArray[1] / 100
-                _temperature = resultArray[2] + resultArray[3] / 100
-                _checksum = resultArray[4]
-            }
-        } else if (DHT == DHTtype.DHT22) {
-            //DHT22
-            let DHT22_dataArray: number[] = [0, 0]
-            for (let index = 0; index < 2; index++) {
-                for (let index2 = 0; index2 < 16; index2++) {
-                    if (dataArray[16 * index + index2]) DHT22_dataArray[index] += 2 ** (15 - index2)
-                }
-            }
-            _humidity = DHT22_dataArray[0] / 10
-            _temperature = DHT22_dataArray[1] / 10
-            _checksum = resultArray[4]
-        }
-
         //verify checksum
         checksumTmp = resultArray[0] + resultArray[1] + resultArray[2] + resultArray[3]
+        _checksum = resultArray[4]
+        if (checksumTmp >= 512) checksumTmp -= 512
         if (checksumTmp >= 256) checksumTmp -= 256
         if (_checksum == checksumTmp) _readSuccessful = true
+
+        //read data if checksum ok
+        if (_readSuccessful) {
+            if (DHT == DHTtype.DHT11) { //DHT11
+                _humidity = resultArray[0] + resultArray[1] / 100
+                _temperature = resultArray[2] + resultArray[3] / 100
+            } else if (DHT == DHTtype.DHT22) { //DHT22
+                let DHT22_dataArray: number[] = [0, 0]
+                for (let index = 0; index < 2; index++) {
+                    for (let index2 = 0; index2 < 16; index2++) {
+                        if (dataArray[16 * index + index2]) DHT22_dataArray[index] += 2 ** (15 - index2)
+                    }
+                }
+                _humidity = DHT22_dataArray[0] / 10
+                _temperature = DHT22_dataArray[1] / 10
+            }
+        }
 
         //serial output
         if (serialOtput) {
@@ -100,12 +98,12 @@ namespace DHT11_DHT22 {
             if (_readSuccessful) {
                 serial.writeLine("Checksum ok")
                 serial.writeLine("Humidity: " + _humidity + " %")
-                serial.writeLine("Temperature: " + _temperature + " 'C")
+                serial.writeLine("Temperature: " + _temperature + " *C")
             } else {
                 serial.writeLine("Checksum error")
             }
 
-            serial.writeLine("------------------------------")
+            serial.writeLine("----------------------------------------")
         }
 
         //wait 2 sec after query if needed
@@ -143,9 +141,9 @@ namespace DHT11_DHT22 {
 
 enum DHTtype {
     //% block="DHT11"
-    DHT11 = 5,
+    DHT11,
     //% block="DHT22"
-    DHT22 = 3,
+    DHT22,
 }
 
 enum dataType {
