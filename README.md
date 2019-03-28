@@ -1,10 +1,10 @@
 # BBC micro:bit MakeCode editor extension for DHT11 and DHT22 humidity/temperature sensors
 
-[DHT11](https://www.mouser.com/ds/2/758/DHT11-Technical-Data-Sheet-Translated-Version-1143054.pdf) and [DHT22](https://www.sparkfun.com/datasheets/Sensors/Temperature/DHT22.pdf) are two popular sensors among microcontroller users, especially the cheap DHT11s. DHT22s cost more but give better data resolution.
+[DHT11](https://www.mouser.com/ds/2/758/DHT11-Technical-Data-Sheet-Translated-Version-1143054.pdf) and [DHT22](https://www.sparkfun.com/datasheets/Sensors/Temperature/DHT22.pdf) are two popular sensors among microcontroller users, especially the cheap DHT11s. DHT22s cost more but have better data resolution.
 
-My codes are based on [MonadnockSystems/pxt-dht11](https://github.com/MonadnockSystems/pxt-dht11) but improved the pin pull-up time calculating method (based on some Arduino examples) with additional features.
+My codes are based on [MonadnockSystems/pxt-dht11](https://github.com/MonadnockSystems/pxt-dht11) but modified the pin pull-up time calculating method based on some Arduino examples with additional features.
 
-Add this extension by go to Advanced -> +extension and copy/paste [https://github.com/alankrantas/pxt-DHT11_DHT22](https://github.com/alankrantas/pxt-DHT11_DHT22) into the search box. Press enter and click the extension to download it.
+Add this extension by go to Advanced -> +Extension and copy/paste [https://github.com/alankrantas/pxt-DHT11_DHT22](https://github.com/alankrantas/pxt-DHT11_DHT22) into the search box. Press enter and click the extension to download it.
 
 ![img_0001](https://user-images.githubusercontent.com/44191076/53887169-aae7d600-405c-11e9-9fd4-688eacbf0721.JPG)
 
@@ -12,13 +12,26 @@ Add this extension by go to Advanced -> +extension and copy/paste [https://githu
 
 ## Blocks
 
-The extension can be used for either DHT11 or DHT22 sensors. Use the first block to read data (it is recommended to wait between queries; 1 second for DHT11 and 2 seconds for DHT22), then use the second one to read humidity level (%) or temperature (celsius).
+The extension can be used for DHT11 or DHT22 sensors. Use the first block to select module type and read data (it is recommended to wait between queries; at least 1 second for DHT11 and 2 seconds for DHT22), then use the second one to read either humidity level (%) or temperature (celsius).
 
-This extension also verifies checksum from sensors. If checksum is wrong, you'll get -999 for both temperature and humidity readings.
+This extension also verifies checksum from sensors. If the checksum is wrong, you'll get -999 for both temperature and humidity readings, and "Last query successful?" block would return false.
 
 ![1](https://user-images.githubusercontent.com/44191076/53888212-dd92ce00-405e-11e9-9947-6cbb0caf10a0.jpg)
 
-![microbit-screenshot](https://user-images.githubusercontent.com/44191076/53931035-7f053880-40ce-11e9-9509-dff5edd7da0e.png)
+![microbit-screenshot](https://user-images.githubusercontent.com/44191076/55158571-3a832f00-519a-11e9-9633-581dabd109ea.png)
+
+```
+basic.forever(function () {
+    DHT11_DHT22.queryData(
+    DHTtype.DHT11,
+    DigitalPin.P0,
+    true,
+    false,
+    true
+    )
+    basic.showString("T: " + DHT11_DHT22.readData(dataType.temperature) + " *C")
+})
+```
 
 You can also choose to output data via serial port:
 
