@@ -7,7 +7,6 @@
     },
     "files": [
         "README.md",
-        "main.ts",
         "dht11_dht22.ts"
     ],
     "testFiles": [
