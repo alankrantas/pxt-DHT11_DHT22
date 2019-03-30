@@ -3,7 +3,7 @@
  * by Alan Wang
  */
 //% block="DHT11/DHT22" weight=100 color=#ff8f3f icon="\uf043"
-namespace DHT11_DHT22 {
+namespace dht11_dht22 {
 
     let _temperature: number = 0.0
     let _humidity: number = 0.0
