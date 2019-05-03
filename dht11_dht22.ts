@@ -1,5 +1,5 @@
 /**
- * MakeCode editor extension for DHT11 and DHT22 humidity/temperature sensors (BETA)
+ * MakeCode editor extension for DHT11 and DHT22 humidity/temperature sensors
  * by Alan Wang
  */
 //% block="DHT11/DHT22" weight=100 color=#ff8f3f icon="\uf043"
@@ -7,7 +7,6 @@ namespace dht11_dht22 {
 
     let _temperature: number = 0.0
     let _humidity: number = 0.0
-    let _checksum: number = 0
     let _readSuccessful: boolean = false
 
     /**
@@ -24,6 +23,7 @@ namespace dht11_dht22 {
         //initialize
         let startTime: number = 0
         let endTime: number = 0
+        let checksum: number = 0
         let checksumTmp: number = 0
         let dataArray: boolean[] = []
         let resultArray: number[] = []
@@ -31,7 +31,7 @@ namespace dht11_dht22 {
         for (let index = 0; index < 5; index++) resultArray.push(0)
         _humidity = -999.0
         _temperature = -999.0
-        _checksum = 0
+        _readSuccessful = false
 
         startTime = input.runningTimeMicros()
 
@@ -56,18 +56,16 @@ namespace dht11_dht22 {
         endTime = input.runningTimeMicros()
 
         //convert byte number array to integer
-        for (let index = 0; index < 5; index++) {
-            for (let index2 = 0; index2 < 8; index2++) {
+        for (let index = 0; index < 5; index++)
+            for (let index2 = 0; index2 < 8; index2++)
                 if (dataArray[8 * index + index2]) resultArray[index] += 2 ** (7 - index2)
-            }
-        }
 
         //verify checksum
         checksumTmp = resultArray[0] + resultArray[1] + resultArray[2] + resultArray[3]
-        _checksum = resultArray[4]
+        checksum = resultArray[4]
         if (checksumTmp >= 512) checksumTmp -= 512
         if (checksumTmp >= 256) checksumTmp -= 256
-        if (_checksum == checksumTmp) _readSuccessful = true
+        if (checksum == checksumTmp) _readSuccessful = true
 
         //read data if checksum ok
         if (_readSuccessful) {
@@ -75,18 +73,15 @@ namespace dht11_dht22 {
                 //DHT11
                 _humidity = resultArray[0] + resultArray[1] / 100
                 _temperature = resultArray[2] + resultArray[3] / 100
-            } else if (DHT == DHTtype.DHT22) {
+            } else {
                 //DHT22
                 let DHT22_dataArray: number[] = [0, 0]
                 let tmpData: number = 1
                 for (let index = 0; index <= 1; index++) {
                     for (let index2 = 0; index2 < 16; index2++) {
                         if (dataArray[16 * index + index2]) {
-                            if (index == 1 && index2 == 0) {
-                                tmpData = -1 //positive or negative temperature indicator
-                            } else {
-                                DHT22_dataArray[index] += 2 ** (15 - index2)
-                            }
+                            if (index == 1 && index2 == 0) tmpData = -1 //positive or negative temperature indicator
+                            else DHT22_dataArray[index] += 2 ** (15 - index2)
                         }
                     }
                 }
@@ -98,11 +93,8 @@ namespace dht11_dht22 {
         //serial output
         if (serialOtput) {
             let DHTstr: string = ""
-            if (DHT == DHTtype.DHT11) {
-                DHTstr = "DHT11"
-            } else if (DHT == DHTtype.DHT22) {
-                DHTstr = "DHT22"
-            }
+            if (DHT == DHTtype.DHT11) DHTstr = "DHT11"
+            else DHTstr = "DHT22"
             serial.writeLine(DHTstr + " query completed in " + (endTime - startTime) + " microseconds")
             if (_readSuccessful) {
                 serial.writeLine("Checksum ok")
@@ -125,17 +117,8 @@ namespace dht11_dht22 {
     */
     //% block="Read $data"
     export function readData(data: dataType): number {
-        let returnData: number = -999.0
-        if (_readSuccessful) {
-            switch (data) {
-                case dataType.humidity:
-                    returnData = _humidity
-                    break
-                case dataType.temperature:
-                    returnData = _temperature
-            }
-        }
-        return returnData
+        if (_readSuccessful) return data == dataType.humidity ? _humidity : _temperature
+        else return -999
     }
 
     /**
