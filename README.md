@@ -20,7 +20,7 @@ This extension also verifies checksum from sensors. If the checksum is wrong, yo
 
 ![microbit-screenshot](https://user-images.githubusercontent.com/44191076/55158571-3a832f00-519a-11e9-9633-581dabd109ea.png)
 
-```
+```blocks
 basic.forever(function () {
     DHT11_DHT22.queryData(
     DHTtype.DHT11,
