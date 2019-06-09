@@ -99,6 +99,10 @@ The third pin on the 4-pin sensor from the left is not used.
 
 If a hardware pull-up resistor already exists, use the internal pull up resistor dosen't seems to affect results.
 
+## Powering up issue
+
+The DHT modlue might not be responsive if you query it immediatly after powering up. In this case you'll need to manually restart micro:bit with power on, or add a small delay (basic.pause) in "on start" block.
+
 ## License
 
 MIT
