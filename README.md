@@ -2,9 +2,9 @@
 
 [DHT11](https://www.mouser.com/ds/2/758/DHT11-Technical-Data-Sheet-Translated-Version-1143054.pdf) and [DHT22](https://www.sparkfun.com/datasheets/Sensors/Temperature/DHT22.pdf) are two popular sensors among microcontroller users, especially the cheap DHT11s. DHT22s cost more but have better data resolution.
 
-My codes are based on [MonadnockSystems/pxt-dht11](https://github.com/MonadnockSystems/pxt-dht11) but modified the pin pull-up time calculating method based on some Arduino examples with additional features.
+My codes are based on [MonadnockSystems/pxt-dht11](https://github.com/MonadnockSystems/pxt-dht11) but modified the pin pull-up time calculating method based on some Arduino examples with several additional features. The extension also support DHT22s.
 
-Add this extension by go to Advanced -> +Extension and copy/paste [https://github.com/alankrantas/pxt-DHT11_DHT22](https://github.com/alankrantas/pxt-DHT11_DHT22) into the search box. Press enter and click the extension to download it.
+To import this extension, go to Advanced -> +Extension and enter "DHT11" or "DHT22" in the search box, or copy/paste [https://github.com/alankrantas/pxt-DHT11_DHT22](https://github.com/alankrantas/pxt-DHT11_DHT22) into the search box. Press enter and click the extension.
 
 ![img_0001](https://user-images.githubusercontent.com/44191076/53887169-aae7d600-405c-11e9-9fd4-688eacbf0721.JPG)
 
@@ -97,11 +97,11 @@ The third pin on the 4-pin sensor from the left is not used.
 
 ![untitled sketch_bb](https://user-images.githubusercontent.com/44191076/53887940-40379a00-405e-11e9-9129-5bdb6262e8a3.png)
 
-If a hardware pull-up resistor already exists, use the internal pull up resistor dosen't seems to affect results.
+If a hardware pull-up resistor already exists, use the internal pull up resistor dosen't seems to affect the results.
 
 ## Powering up issue
 
-The DHT modlue might not be responsive if you query it immediatly after powering up. In this case you'll need to manually restart micro:bit with power on, or add a small delay (basic.pause) in "on start" block.
+The DHT modlue might not be responsive if you query it immediatly after powering up. In this case you'll need to manually restart micro:bit while connecting to power, or add a small delay (like **basic.pause(100)**) in "on start" block.
 
 ## License
 
