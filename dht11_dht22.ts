@@ -5,8 +5,8 @@
 //% block="DHT11/DHT22" weight=100 color=#ff8f3f icon="\uf043"
 namespace dht11_dht22 {
 
-    let _temperature: number = 0.0
-    let _humidity: number = 0.0
+    let _temperature: number = -999.0
+    let _humidity: number = -999.0
     let _readSuccessful: boolean = false
 
     /**
@@ -40,6 +40,7 @@ namespace dht11_dht22 {
         basic.pause(18)
         if (pullUp) pins.setPull(dataPin, PinPullMode.PullUp) //pull up data pin if needed
         pins.digitalReadPin(dataPin)
+        control.waitMicros(20)
         while (pins.digitalReadPin(dataPin) == 1);
         while (pins.digitalReadPin(dataPin) == 0); //sensor response
         while (pins.digitalReadPin(dataPin) == 1); //sensor response
@@ -75,18 +76,13 @@ namespace dht11_dht22 {
                 _temperature = resultArray[2] + resultArray[3] / 100
             } else {
                 //DHT22
-                let DHT22_dataArray: number[] = [0, 0]
-                let tmpData: number = 1
-                for (let index = 0; index <= 1; index++) {
-                    for (let index2 = 0; index2 < 16; index2++) {
-                        if (dataArray[16 * index + index2]) {
-                            if (index == 1 && index2 == 0) tmpData = -1 //positive or negative temperature indicator
-                            else DHT22_dataArray[index] += 2 ** (15 - index2)
-                        }
-                    }
+                let temp_sign: number = 1
+                if (resultArray[2] >= 128) {
+                    resultArray[2] -= 128
+                    temp_sign = -1
                 }
-                _humidity = DHT22_dataArray[0] / 10
-                _temperature = DHT22_dataArray[1] / 10 * tmpData
+                _humidity = (resultArray[0] * 256 + resultArray[1]) / 10
+                _temperature = (resultArray[2] * 256 + resultArray[3]) / 10 * temp_sign
             }
         }
 
@@ -103,7 +99,6 @@ namespace dht11_dht22 {
             } else {
                 serial.writeLine("Checksum error")
             }
-
             serial.writeLine("----------------------------------------")
         }
 
@@ -117,8 +112,7 @@ namespace dht11_dht22 {
     */
     //% block="Read $data"
     export function readData(data: dataType): number {
-        if (_readSuccessful) return data == dataType.humidity ? _humidity : _temperature
-        else return -999
+        return data == dataType.humidity ? _humidity : _temperature
     }
 
     /**
