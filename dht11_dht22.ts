@@ -155,7 +155,7 @@ namespace dht11_dht22 {
     }
 
     /**
-    * Select temperature type (cCelsius/Fahrenheit)"
+    * Select temperature type (Celsius/Fahrenheit)"
     */
     //% block="Temperature type: $temp" advanced=true
     export function selectTempType(temp: tempType) {
