@@ -81,6 +81,8 @@ Temperature: 21.899999999999999 *C
 ----------------------------------------
 ```
 
+Temperature is default outputed in Celsius. You can also change it to Fahrenheit with the block "Temperature type" in the advanced panel.
+
 ## Sensor versions and wiring
 
 There are two types of DHT11/DHT22s, one without PCB boards and have 4 pins; another have PCB boards, built-in pull up resistors and only 3 pins. Personally I would recommend you to use PCB versions.
@@ -102,6 +104,8 @@ If a hardware pull-up resistor already exists, use the internal pull up resistor
 ## Powering up issue
 
 The DHT modlue might not be responsive if you query it immediatly after powering up. In this case you'll need to manually restart micro:bit while connecting to power, or add a small delay (like **basic.pause(100)**) in "on start" block.
+
+The driver also checks if the sensor respond to protocol before querying (in case the sensor somehow disconnected). This result can be read by using a block in the advanced panel called "Last query sensor responding?". (Note: the querying function may still freeze if the sensor disconnected right in the 20-30ms querying process.)
 
 ## License
 
